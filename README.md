@@ -1,42 +1,77 @@
 # SEISwift
 
-**Sxnnyside Eloquent Icons** – Official Swift package for high-quality, professionally designed icons.
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-SEISwift provides native, type-safe access to the complete Sxnnyside Eloquent Icons catalog for both SwiftUI and UIKit applications. Built with modern Swift best practices and fully integrated with Swift Package Manager.
+<p align="center">
+  <strong>Type-safe ✦ SwiftUI-native ✦ Zero configuration</strong><br>
+  <em>Native, type-safe access to Sxnnyside Eloquent Icons for SwiftUI, UIKit, and AppKit.</em>
+</p>
+
+<p align="center">
+  <a href="#about">About</a> ✦
+  <a href="#features">Features</a> ✦
+  <a href="#installation">Installation</a> ✦
+  <a href="#usage">Usage</a> ✦
+  <a href="#architecture">Architecture</a> ✦
+  <a href="#contributing">Contributing</a>
+</p>
+
+---
+
+## About
+
+**SEISwift** is the official Swift package for Sxnnyside Eloquent Icons (SEI), providing a type-safe enum-based API instead of string-based asset lookups.
+
+Most icon packages either ship raw asset names as strings — no autocomplete, no compile-time safety, typos fail at runtime — or wrap icons in a heavyweight abstraction that fights SwiftUI's own composition model. SEISwift does neither: `SEIIcon` is a small `View` that composes with `.font`, `.foregroundStyle`, `Label`, `Button`, and any layout container exactly like `Image` does, because that's what it wraps.
+
+Icons ship as vector PDF inside a native Xcode Asset Catalog, resolved through `Bundle.module` — never `Bundle.main` — so the package works correctly as a dependency, not just standalone.
+
+### Philosophy
+
+> *"A Swift package should feel like a native part of the Apple ecosystem, not an SVG collection superficially adapted to Swift."*
+
+SEISwift is a Sxnnyside Project.
 
 ## Features
 
-- ✨ **120 professionally designed icons**
-- 🎯 **Type-safe API** – No string-based lookups
-- 🔄 **Dual platform support** – SwiftUI and UIKit
-- 📦 **Swift Package Manager** ready
-- 🎨 **Full styling support** – Colors, sizes, rendering modes
-- 📚 **Comprehensive documentation**
-- ✅ **Production ready** with complete test coverage
+- **`SEIIcon` view**: a single, small SwiftUI `View` for rendering any icon, outline or filled.
+- **`SEIIcons` enum**: type-safe, autocomplete-friendly icon identifiers — 120 icons.
+- **Type-safe filled icons** via `SEIIcon.filled(_:)` and `SEIIconsFilled` — only icons that actually have filled artwork are accepted, so there's no runtime crash for requesting one that doesn't exist.
+- **Triple platform support**: SwiftUI (`SEIIcon`), UIKit (`UIImage.sei(_:)`), and AppKit (`NSImage.sei(_:)`).
+- **Modern Swift**: Swift 6 language mode, strict concurrency, `Sendable` conformance throughout.
+- **Zero configuration**: `Bundle.module` resolves resources automatically — no manual setup.
 
 ## Installation
 
-### Swift Package Manager
+### Prerequisites
 
-Add SEISwift to your project using Xcode:
+- Swift 6.0+ (Xcode 16.0+)
 
-1. File → Add Package Dependencies
-2. Enter the repository URL: `https://github.com/sxnnyside/sei_swift`
-3. Select version: `1.0.0` or later
+No other prerequisites — Swift Package Manager is bundled with the Swift toolchain.
+
+### From Source
+
+```bash
+git clone https://github.com/sxnnyside-project/sei-swift.git
+cd sei-swift
+
+swift build
+```
 
 Or add it to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sxnnyside/sei_swift", from: "1.0.0")
+    .package(url: "https://github.com/sxnnyside-project/sei-swift.git", from: "2.0.0")
 ]
 ```
+
+Or via Xcode: File → Add Package Dependencies → `https://github.com/sxnnyside-project/sei-swift.git`.
 
 ## Usage
 
 ### SwiftUI
-
-Use the `SxEloIcon` view for declarative icon rendering:
 
 ```swift
 import SwiftUI
@@ -45,59 +80,16 @@ import SEISwift
 struct ContentView: View {
     var body: some View {
         VStack(spacing: 20) {
-            // Basic icon
-            SxEloIcon(.home)
-            
-            // Styled icon
-            SxEloIcon(.heart)
+            SEIIcon(.home)
+
+            SEIIcon(.heart)
                 .foregroundStyle(.red)
                 .font(.largeTitle)
-            
-            // Custom rendering mode
-            SxEloIcon(.lock, renderingMode: .template)
-                .foregroundStyle(.blue)
-                .font(.title)
-        }
-    }
-}
-```
 
-#### Advanced SwiftUI Examples
+            SEIIcon.filled(.heart)
+                .foregroundStyle(.red)
 
-```swift
-// In a list
-List {
-    ForEach(items) { item in
-        Label {
-            Text(item.name)
-        } icon: {
-            SxEloIcon(.folder)
-                .foregroundStyle(.blue)
-        }
-    }
-}
-
-// In a button
-Button {
-    // Action
-} label: {
-    HStack {
-        SxEloIcon(.settings)
-        Text("Settings")
-    }
-}
-.foregroundStyle(.white)
-.padding()
-.background(.blue)
-.cornerRadius(8)
-
-// In a toolbar
-.toolbar {
-    ToolbarItem(placement: .primaryAction) {
-        Button {
-            // Action
-        } label: {
-            SxEloIcon(.add)
+            Label("Settings", icon: .settings)
         }
     }
 }
@@ -105,143 +97,77 @@ Button {
 
 ### UIKit
 
-Use the `UIImage.sei(_:)` extension for imperative icon loading:
-
 ```swift
 import UIKit
 import SEISwift
 
-class ViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Image view
-        let imageView = UIImageView(image: .sei(.home))
-        imageView.tintColor = .systemBlue
-        
-        // Button
-        let button = UIButton(type: .system)
-        button.setImage(.sei(.settings), for: .normal)
-        
-        // Tab bar item
-        let tabBarItem = UITabBarItem(
-            title: "Home",
-            image: .sei(.home),
-            selectedImage: .sei(.home)
-        )
-        
-        // Navigation bar
-        let barButtonItem = UIBarButtonItem(
-            image: .sei(.add),
-            style: .plain,
-            target: self,
-            action: #selector(addTapped)
-        )
-        navigationItem.rightBarButtonItem = barButtonItem
-    }
-}
+let imageView = UIImageView(image: .sei(.home))
+imageView.tintColor = .systemBlue
 ```
 
-## Icon Catalog
-
-SEISwift includes 120 carefully crafted icons organized into categories:
-
-### Categories
-
-- **Common Actions**: add, back, check, close, edit, filter, menu, more, remove, search, share, sort
-- **Navigation**: home, apps, dashboard, layoutGrid, layoutList, tab, window
-- **User & Account**: account, profile, user, users, team, login, logout, register
-- **Communication**: message, notification, invite
-- **Security**: lock, unlock, shield, key, fingerprint, firewall, verified
-- **Files & Storage**: file, folder, cloud, database, backup, restore
-- **Development**: code, terminal, bug, debug, api, function, variable, brackets
-- **System**: settings, power, cpu, server, router, connection, sync, update
-- **Status**: success, error, warning, info, help, alert
-- **Media**: music, sound, mute, gamepad, joystick
-- **Analytics**: analytics, chartBar, chartLine, chartPie, progress
-- **Commerce**: money, wallet, creditCard, pricing, discount, invoice
-- **Productivity**: calendar, clock, timer, task, checklist, focus
-- **Network**: wifi, offline, globe, browser, link
-- **Utility**: qr, scan, visibility, star, heart, flame, badge, crown
-
-[View complete icon list →](Sources/SEISwift/SEIIcon.swift)
-
-## API Reference
-
-### `SEIIcon`
-
-A type-safe enumeration of all available icons.
+### AppKit
 
 ```swift
-public enum SEIIcon: String, CaseIterable, Sendable {
-    case home
-    case settings
-    case lock
-    // ... 117 more cases
-}
+import AppKit
+import SEISwift
+
+let imageView = NSImageView(image: .sei(.home) ?? NSImage())
 ```
 
-### `SxEloIcon`
+For the complete icon catalog, API reference, and advanced examples (lists, toolbars, filled-icon variants), see [Sources/SEISwift/SEIIcons.swift](Sources/SEISwift/SEIIcons.swift), [Sources/SEISwift/SEIIconsFilled.swift](Sources/SEISwift/SEIIconsFilled.swift), and the DocC documentation catalog at [Sources/SEISwift/SEISwift.docc](Sources/SEISwift/SEISwift.docc).
 
-SwiftUI view for rendering icons with full styling support.
+## Migrating from 1.x
 
-```swift
-public struct SxEloIcon: View {
-    public init(
-        _ icon: SEIIcon,
-        renderingMode: Image.TemplateRenderingMode? = .template
-    )
-}
+Version 2.0.0 renames the icon enum and the SwiftUI view:
+
+| 1.x | 2.0.0+ |
+| --- | --- |
+| `SEIIcon` (enum) | `SEIIcons` |
+| `SxEloIcon` (view) | `SEIIcon` |
+
+`SxEloIcon` remains available as `@available(*, deprecated, renamed: "SEIIcon")`. The enum rename has no compatibility shim — `SEIIcon` is now the view's name, so the two can't coexist under one symbol.
+
+## Architecture
+
+```
+sei-swift/
+├── Sources/SEISwift/    # library target — icons, views, platform extensions
+├── Tests/SEISwiftTests/ # XCTest suite
+└── Examples/            # reference usage, not part of any SPM target
 ```
 
-### `UIImage.sei(_:)`
+For a detailed breakdown, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-UIKit extension for loading icons as UIImage.
+## Development
 
-```swift
-extension UIImage {
-    public static func sei(_ icon: SEIIcon) -> UIImage?
-}
+The full command surface is exposed through a root `Justfile`, run via `just`:
+
+```bash
+just check     # full quality gate — format, lint, typecheck, test
 ```
 
-## Requirements
+See [CLAUDE.md](CLAUDE.md) for the full architecture and tooling rationale.
 
-- iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+
-- Swift 5.9+
-- Xcode 15.0+
-
-## Philosophy
-
-SEISwift follows Apple's design principles:
-
-- **Type Safety**: Compile-time guarantees with enum-based API
-- **Clarity**: Intuitive naming and clear documentation
-- **Consistency**: Unified experience across SwiftUI and UIKit
-- **Performance**: Optimized asset loading with Bundle.module
-- **Reliability**: Comprehensive test coverage
-
-## License
-
-Sxnnyside Project – Proprietary License
-
-All rights reserved. This software and its icons are proprietary to the Sxnnyside Project.
+CI runs the same gate on every push/PR; pushing a `vX.Y.Z` tag triggers a
+release build and a GitHub Release generated from `CHANGELOG.md`.
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
-- How to propose new icons
-- Icon design and naming conventions
-- Code standards and testing
-- Pull request process
+Contributions are accepted. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Please also read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+Before contributing, read the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Support
 
-- Documentation: [docs.sxnnyside.com](https://docs.sxnnyside.com)
-- Issues: [GitHub Issues](https://github.com/sxnnyside/sei_swift/issues)
-- Email: support@sxnnyside.com
+See [SUPPORT.md](SUPPORT.md) for how to get help, and [SECURITY.md](SECURITY.md) to report a vulnerability.
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Made with ❤️ by the Sxnnyside Team**
+<p align="center">
+  <strong>SEISwift</strong> — A Sxnnyside Project<br>
+  <em>&copy; 2026 Sxnnyside Project</em>
+</p>

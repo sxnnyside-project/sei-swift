@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // Created by Sxnnyside Project on 30/01/26.
 
 import PackageDescription
@@ -6,10 +6,11 @@ import PackageDescription
 let package = Package(
     name: "SEISwift",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6)
+        .iOS(.v15),
+        .macOS(.v12),
+        .tvOS(.v15),
+        .watchOS(.v8),
+        .visionOS(.v1)
     ],
     products: [
         .library(
@@ -22,11 +23,13 @@ let package = Package(
             name: "SEISwift",
             resources: [
                 .process("Resources")
-            ]
+            ],
+            swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(
             name: "SEISwiftTests",
-            dependencies: ["SEISwift"]
+            dependencies: ["SEISwift"],
+            swiftSettings: [.swiftLanguageMode(.v6)]
         )
     ]
 )

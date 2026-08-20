@@ -16,15 +16,21 @@ import Foundation
 ///
 /// ### Icon Catalog
 ///
-/// - ``SEIIcon``
+/// - ``SEIIcons``
+/// - ``SEIIconsFilled``
 ///
 /// ### SwiftUI Components
 ///
-/// - ``SxEloIcon``
+/// - ``SEIIcon``
+/// - ``SwiftUI/Label``
 ///
 /// ### UIKit Extensions
 ///
 /// - ``UIImage/sei(_:)``
+///
+/// ### AppKit Extensions
+///
+/// - ``NSImage/sei(_:)``
 ///
 /// ## Getting Started
 ///
@@ -36,7 +42,7 @@ import Foundation
 ///
 /// struct ContentView: View {
 ///     var body: some View {
-///         SxEloIcon(.home)
+///         SEIIcon(.home)
 ///             .foregroundStyle(.blue)
 ///             .font(.title)
 ///     }
@@ -51,4 +57,13 @@ import Foundation
 ///
 /// let imageView = UIImageView(image: .sei(.home))
 /// imageView.tintColor = .systemBlue
+/// ```
+///
+/// ### AppKit
+///
+/// ```swift
+/// import AppKit
+/// import SEISwift
+///
+/// let imageView = NSImageView(image: .sei(.home) ?? NSImage())
 /// ```

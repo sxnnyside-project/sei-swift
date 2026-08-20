@@ -7,7 +7,6 @@ import SEISwift
 // MARK: - SwiftUI Examples
 
 /// Complete example app demonstrating SEISwift usage
-@available(iOS 15.0, macOS 12.0, *)
 struct ExampleApp: App {
     var body: some Scene {
         WindowGroup {
@@ -17,7 +16,6 @@ struct ExampleApp: App {
 }
 
 /// Tab-based navigation showcasing different icon categories
-@available(iOS 15.0, macOS 12.0, *)
 struct ExampleTabView: View {
     var body: some View {
         TabView {
@@ -35,17 +33,16 @@ struct ExampleTabView: View {
 }
 
 /// Home view with icon grid
-@available(iOS 15.0, macOS 12.0, *)
 struct HomeView: View {
     let columns = [
         GridItem(.adaptive(minimum: 60))
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(Array(SEIIcon.allCases.prefix(20)), id: \.self) { icon in
+                    ForEach(Array(SEIIcons.allCases.prefix(20)), id: \.self) { icon in
                         IconCard(icon: icon)
                     }
                 }
@@ -57,13 +54,12 @@ struct HomeView: View {
 }
 
 /// Individual icon card
-@available(iOS 15.0, macOS 12.0, *)
 struct IconCard: View {
-    let icon: SEIIcon
+    let icon: SEIIcons
     
     var body: some View {
         VStack(spacing: 8) {
-            SxEloIcon(icon)
+            SEIIcon(icon)
                 .font(.largeTitle)
                 .foregroundStyle(.blue)
             
@@ -76,10 +72,9 @@ struct IconCard: View {
 }
 
 /// Settings view with list of options
-@available(iOS 15.0, macOS 12.0, *)
 struct SettingsView: View {
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section("Account") {
                     SettingsRow(icon: .profile, title: "Profile", color: .blue)
@@ -99,15 +94,14 @@ struct SettingsView: View {
 }
 
 /// Settings row with icon
-@available(iOS 15.0, macOS 12.0, *)
 struct SettingsRow: View {
-    let icon: SEIIcon
+    let icon: SEIIcons
     let title: String
     let color: Color
     
     var body: some View {
         HStack(spacing: 12) {
-            SxEloIcon(icon)
+            SEIIcon(icon)
                 .font(.title2)
                 .foregroundStyle(color)
                 .frame(width: 32)
@@ -167,7 +161,7 @@ class ExampleViewController: UIViewController {
         stackView.distribution = .fillEqually
         
         // Create icon views
-        let icons: [SEIIcon] = [.home, .user, .heart, .star, .settings]
+        let icons: [SEIIcons] = [.home, .user, .heart, .star, .settings]
         
         for icon in icons {
             let imageView = UIImageView(image: .sei(icon))
@@ -196,7 +190,7 @@ class ExampleViewController: UIViewController {
 /// Example table view controller
 class IconTableViewController: UITableViewController {
     
-    private let icons = Array(SEIIcon.allCases.prefix(20))
+    private let icons = Array(SEIIcons.allCases.prefix(20))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -256,7 +250,7 @@ class IconTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with icon: SEIIcon) {
+    func configure(with icon: SEIIcons) {
         iconView.image = .sei(icon)
         nameLabel.text = icon.rawValue.capitalized
     }
@@ -265,7 +259,7 @@ class IconTableViewCell: UITableViewCell {
 
 // MARK: - Utility Extensions
 
-extension SEIIcon {
+extension SEIIcons {
     /// Example: Get icon color based on category
     var suggestedColor: Color {
         switch self {
