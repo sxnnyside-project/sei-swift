@@ -2,6 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
+[![CI](https://github.com/sxnnyside-project/sei-swift/actions/workflows/ci.yml/badge.svg)](https://github.com/sxnnyside-project/sei-swift/actions/workflows/ci.yml)
 
 <p align="center">
   <strong>Type-safe ✦ SwiftUI-native ✦ Zero configuration</strong><br>
